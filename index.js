@@ -76,4 +76,4 @@ var server = http.createServer(function (req, res) {
 
 server.listen(8000);
 
-searchId('76561198121964474');
+searchId('76561198144376039');
