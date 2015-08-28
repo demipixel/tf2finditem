@@ -21,7 +21,7 @@ function searchId(id) {
                 summ = summ.players[0];
                 checked[summ.steamid] = true;
                 totalChecked++;
-                if (summ.gameid == 440) {
+                if (summ.personastate > 0) {
                     if (cVersion == version) {
                         currentList.push(summ.steamid);
 //                         console.log('pushing ' + summ.steamid);
@@ -61,4 +61,4 @@ var server = http.createServer(function (req, res) {
 
 server.listen(8000);
 
-searchId('76561198130148331');
+searchId('76561198069672028');
