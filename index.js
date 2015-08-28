@@ -51,7 +51,7 @@ function searchId(id) {
 }
 
 var server = http.createServer(function (req, res) {
-    //req.writeHead(200, {'Content-Type': 'text/plain'});
+    res.writeHead(200, {'Content-Type': 'text/html;level=1'});
     var str = 'Total backpacks searched: <b>' + totalChecked + '</b><br><br>';
     for (var y in yes) {
         str += '<a href="http://steamcommunity.com/profiles/' + yes[y] + '">http://steamcommunity.com/profiles/' + yes[y] + '</a><br>';
