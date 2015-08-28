@@ -25,7 +25,7 @@ function searchId(id) {
                 summ = summ.players[0];
                 checked[summ.steamid] = true;
                 totalChecked++;
-                if (summ.personastate > 0) {
+                if (/*summ.personastate > 0*/ summ.gameid == 440) {
                     if (cVersion == version && summ.gameid == 440) {
                         currentList.push(summ.steamid);
 //                         console.log('pushing ' + summ.steamid);
@@ -43,7 +43,7 @@ function searchId(id) {
                     });
                 }
                 
-                if (cVersion == version && totalChecked > goneThrough - 500) {
+                if (cVersion == version && totalChecked > goneThrough - 100) {
                     //console.log(currentList.length + ' == '+ COUNT + '?');
                     next();
                 }
