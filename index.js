@@ -26,12 +26,13 @@ function searchId(id) {
                 checked[summ.steamid] = true;
                 totalChecked++;
                 if (summ.personastate > 0) {
-                    if (cVersion == version) {
+                    if (cVersion == version && summ.gameid == 440) {
                         currentList.push(summ.steamid);
 //                         console.log('pushing ' + summ.steamid);
-                        next();
+                        //next();
                     }
                     sw.items(440, summ.steamid, function(err, items) {
+                        if (!items) return;
                         items = items.items;
                         for (var i in items) {
                             if (items[i].defindex == 5817) {
@@ -42,18 +43,20 @@ function searchId(id) {
                     });
                 }
                 
-                /*if (cVersion == version && totalChecked > goneThrough - 100) {
-                    next()
-                }*/
+                if (cVersion == version && totalChecked > goneThrough - 500) {
+                    //console.log(currentList.length + ' == '+ COUNT + '?');
+                    next();
+                }
             });
         }
     });
 }
 
 function next() {
-    if (currentList.length == COUNT) {
+    if (currentList.length >= COUNT) {
         version++;
-        COUNT = 20;
+        currentList.splice(COUNT);
+        COUNT = 10;
         console.log('new version: ' + version + '. Found ' + totalChecked + '. Gone through: ' + goneThrough);
         for (var c in currentList) {
             searchId(currentList[c]);
