@@ -56,10 +56,10 @@ function searchId(id) {
 }
 
 function next() {
-    if (currentList.length >= COUNT || totalChecked > goneThrough - 20) {
+    if (currentList.length >= COUNT || totalChecked > goneThrough - 50) {
         version++;
         currentList.splice(COUNT);
-        COUNT = 10;
+        COUNT = 50;
         console.log('new version: ' + version + '. Found ' + totalChecked + '. Gone through: ' + goneThrough);
         for (var c in currentList) {
             searchId(currentList[c]);
@@ -79,4 +79,4 @@ var server = http.createServer(function (req, res) {
 
 server.listen(8000);
 
-searchId('76561198000461999');
+searchId('76561198110272840');
