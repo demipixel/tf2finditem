@@ -46,7 +46,7 @@ function api(type, info, done) {
         try {
 		    var json = JSON.parse(body);
 		} catch (err) {
-		    return;
+		    return done(err);
 		}
 		
 		

@@ -13,42 +13,56 @@ var yes = Array();
 var COUNT = 5;
 
 function searchId(id) {
+    var cVersion = version;
     sw.friends(id, function(err, people) {
+        if (!people) return;
         var friends = people.friends;
-        var cVersion = version;
         for (f in friends) {
             if (checked[friends[f].steamid]) {
                 continue;
             }
             checked[friends[f].steamid] = true;
-            goneThrough++;
             sw.summary(friends[f].steamid, function(err, summ) {
+                if (err) return;
                 summ = summ.players[0];
-                totalChecked++;
                 if (summ.personastate > 0) {
+                    goneThrough++;
                     if (cVersion == version) {
                         currentList.push(summ.steamid);
 //                         console.log('pushing ' + summ.steamid);
                         //next();
                     }
-                    sw.items(440, summ.steamid, function(err, items) {
-                        if (!items) {
-                            noItem++;
-                            return;
-                        }
-                        items = items.items;
-                        for (var i in items) {
-                            if (items[i].defindex == 5817) {
-                                console.log('http://steamcommunity.com/profiles/' + summ.steamid);
-                                yes.push(summ.steamid);
+                    
+                    var getItems = function(summ) {
+                    
+                        sw.items(440, summ.steamid, function(err, items) {
+                            if (err || !items) {   
+                                goneThrough--;
+                                checked[summ.steamid] = false;
+                                
+                                if (cVersion == version && totalChecked > goneThrough - 100) {
+                                    next();
+                                }
+                                return;
                             }
-                        }
-                    });
-                }
-                
-                if (cVersion == version && totalChecked > goneThrough - 100) {
-                    //console.log(currentList.length + ' == '+ COUNT + '?');
-                    next();
+                            totalChecked++;
+                            items = items.items;
+                            for (var i in items) {
+                                if (items[i].defindex == 5817) {
+                                    console.log('http://steamcommunity.com/profiles/' + summ.steamid);
+                                    yes.push(summ.steamid);
+                                }
+                            }
+                        
+                            //console.log('cmon',totalChecked,goneThrough,cVersion == version);
+                        
+                            if (cVersion == version && totalChecked > goneThrough - 100) {
+                                next();
+                            }
+                        });
+                    }
+                    
+                    getItems(summ);
                 }
             });
         }
@@ -59,7 +73,7 @@ function next() {
     if (currentList.length >= COUNT || totalChecked > goneThrough - 50) {
         version++;
         currentList.splice(COUNT);
-        COUNT = 50;
+        COUNT = Math.min(COUNT + 5, 30);
         console.log('new version: ' + version + '. Found ' + totalChecked + '. Gone through: ' + goneThrough);
         for (var c in currentList) {
             searchId(currentList[c]);
@@ -79,4 +93,4 @@ var server = http.createServer(function (req, res) {
 
 server.listen(8000);
 
-searchId('76561198110272840');
+searchId('76561198068952127');
