@@ -16,7 +16,7 @@ var totalProcessed = 0;
 
 var yes = Array();
 
-var COUNT = 5;
+var COUNT = 3;
 
 function searchId(id) {
     var cVersion = version;
@@ -109,7 +109,7 @@ function next() {
     }
     
     if (currentList.length > 50) currentList = currentList.splice(currentList.length - 50);
-    COUNT = Math.min(COUNT + 2, 30);
+    COUNT = 15;
 }
 
 var server = http.createServer(function (req, res) {
@@ -123,4 +123,4 @@ var server = http.createServer(function (req, res) {
 
 server.listen(8000);
 
-searchId('76561197982241807');
+searchId('76561198086918996');
