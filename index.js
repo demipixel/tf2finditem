@@ -25,8 +25,8 @@ function searchId(id) {
             sw.summary(friends[f].steamid, function(err, summ) {
                 summ = summ.players[0];
                 totalChecked++;
-                if (/*summ.personastate > 0*/ summ.gameid == 440) {
-                    if (cVersion == version && summ.gameid == 440) {
+                if (summ.personastate > 0) {
+                    if (cVersion == version) {
                         currentList.push(summ.steamid);
 //                         console.log('pushing ' + summ.steamid);
                         //next();
@@ -76,4 +76,4 @@ var server = http.createServer(function (req, res) {
 
 server.listen(8000);
 
-searchId('76561198160804144');
+searchId('76561198044193282');
