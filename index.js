@@ -32,7 +32,10 @@ function searchId(id) {
                         //next();
                     }
                     sw.items(440, summ.steamid, function(err, items) {
-                        if (!items) return;
+                        if (!items) {
+                            noItem++;
+                            return;
+                        }
                         items = items.items;
                         for (var i in items) {
                             if (items[i].defindex == 5817) {
@@ -76,4 +79,4 @@ var server = http.createServer(function (req, res) {
 
 server.listen(8000);
 
-searchId('76561198044193282');
+searchId('76561198000461999');
