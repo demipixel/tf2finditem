@@ -20,10 +20,10 @@ function searchId(id) {
             if (checked[friends[f].steamid]) {
                 continue;
             }
+            checked[friends[f].steamid] = true;
             goneThrough++;
             sw.summary(friends[f].steamid, function(err, summ) {
                 summ = summ.players[0];
-                checked[summ.steamid] = true;
                 totalChecked++;
                 if (/*summ.personastate > 0*/ summ.gameid == 440) {
                     if (cVersion == version && summ.gameid == 440) {
@@ -53,7 +53,7 @@ function searchId(id) {
 }
 
 function next() {
-    if (currentList.length >= COUNT) {
+    if (currentList.length >= COUNT || totalChecked > goneThrough - 20) {
         version++;
         currentList.splice(COUNT);
         COUNT = 10;
@@ -76,4 +76,4 @@ var server = http.createServer(function (req, res) {
 
 server.listen(8000);
 
-searchId('76561197968607445');
+searchId('76561198160804144');
