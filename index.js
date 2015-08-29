@@ -4,9 +4,15 @@ var http = require('http');
 var currentList = Array();
 var version = 0;
 
+var totalScanned = 0;
+
+var checkedTemp = {}
 var checked = {};
-var totalChecked = 0;
-var goneThrough = 0;
+var thisChecked = 0;
+var goneThrough = 0; // Of this version, 
+var allFriendsOnline = 0; // Of this version, how many friends found to be online?
+
+var totalProcessed = 0;
 
 var yes = Array();
 
@@ -18,7 +24,7 @@ function searchId(id) {
         if (!people) return;
         var friends = people.friends;
         for (f in friends) {
-            if (checked[friends[f].steamid]) {
+            if (checked[friends[f].steamid] || checkedTemp[friends[f].steamid]) {
                 continue;
             }
             checked[friends[f].steamid] = true;
@@ -26,37 +32,51 @@ function searchId(id) {
                 if (err) return;
                 summ = summ.players[0];
                 if (summ.personastate > 0) {
-                    goneThrough++;
-                    if (cVersion == version) {
+                    if (cVersion == version && summ.gameid == 440) {
+                        allFriendsOnline++;
+                        goneThrough++;
                         currentList.push(summ.steamid);
-//                         console.log('pushing ' + summ.steamid);
-                        //next();
                     }
                     
                     var getItems = function(summ) {
                     
                         sw.items(440, summ.steamid, function(err, items) {
+                            if (cVersion == version) totalProcessed++;
                             if (err || !items) {   
-                                goneThrough--;
+                                if (cVersion == version) {
+                                    goneThrough--;
+                                    allFriendsOnline--;
+                                }
                                 checked[summ.steamid] = false;
+                                checkedTemp[summ.steadid] = true;
                                 
-                                if (cVersion == version && totalChecked > goneThrough - 100) {
+                                //console.log('MINUS ' + cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',summ.steamid);
+                                
+                                if (cVersion == version && thisChecked > goneThrough * 0.75 && goneThrough > allFriendsOnline * 0.5 + 5) {
+                                    next();
+                                } else if (cVersion == version && thisChecked == 0 && goneThrough < 10) {
                                     next();
                                 }
                                 return;
                             }
-                            totalChecked++;
+                            totalScanned++;
+                            //console.log('Checking bp v'+cVersion);
+                            if (cVersion == version) {
+                                thisChecked++;
+                                //console.log(cVersion + '.' + thisChecked,goneThrough,allFriendsOnline,'total',totalProcessed,'of',summ.steamid);
+                            }
                             items = items.items;
                             for (var i in items) {
                                 if (items[i].defindex == 5817) {
-                                    console.log('http://steamcommunity.com/profiles/' + summ.steamid);
+                                    console.log('http://steamcommunity.com/profiles/' + summ.steamid,'(version ' + cVersion + ')');
                                     yes.push(summ.steamid);
+                                    break;
                                 }
                             }
                         
-                            //console.log('cmon',totalChecked,goneThrough,cVersion == version);
+                            //console.log('cmon',thisChecked,goneThrough,cVersion == version);
                         
-                            if (cVersion == version && totalChecked > goneThrough - 100) {
+                            if (cVersion == version && thisChecked > goneThrough * 0.75 && goneThrough > allFriendsOnline * 0.5 + 5) {
                                 next();
                             }
                         });
@@ -69,22 +89,32 @@ function searchId(id) {
     });
 }
 
-function next() {
-    if (currentList.length >= COUNT || totalChecked > goneThrough - 50) {
-        version++;
-        currentList.splice(COUNT);
-        COUNT = Math.min(COUNT + 5, 30);
-        console.log('new version: ' + version + '. Found ' + totalChecked + '. Gone through: ' + goneThrough);
-        for (var c in currentList) {
-            searchId(currentList[c]);
-        }
-        currentList = Array();
+function next() {        
+    console.log('passed version: ' + version + '. Found ' + thisChecked + '. Gone through: ' + goneThrough + '. Total: ' + totalScanned + '. Friends: ' + allFriendsOnline + '. length: ' + currentList.length);
+    
+    version++;
+    thisChecked = 0;
+    goneThrough = 0;
+    allFriendsOnline = 0;
+    totalProcessed = 0;
+    
+    for (var i = 0; i < COUNT; i++) {
+        var id = currentList.splice(0,1);
+        if (!id[0]) break;
+        else searchId(id[0]);
     }
+    
+    if (version % 5 == 0) {
+        checkedTemp = {};
+    }
+    
+    if (currentList.length > 50) currentList = currentList.splice(currentList.length - 50);
+    COUNT = Math.min(COUNT + 2, 30);
 }
 
 var server = http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/html;level=1'});
-    var str = 'Total backpacks searched: <b>' + totalChecked + '</b><br><br>';
+    var str = 'Total backpacks searched: <b>' + totalScanned + '</b><br><br>';
     for (var y in yes) {
         str += '<a href="http://steamcommunity.com/profiles/' + yes[y] + '">http://steamcommunity.com/profiles/' + yes[y] + '</a><br>';
     }
@@ -93,4 +123,4 @@ var server = http.createServer(function (req, res) {
 
 server.listen(8000);
 
-searchId('76561198068952127');
+searchId('76561197982241807');
