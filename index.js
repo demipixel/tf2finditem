@@ -32,10 +32,10 @@ function searchId(id) {
                 if (err) return;
                 summ = summ.players[0];
                 if (summ.personastate > 0) {
-                    if (cVersion == version && summ.gameid == 440) {
+                    if (cVersion == version) {
                         allFriendsOnline++;
                         goneThrough++;
-                        currentList.push(summ.steamid);
+                        if (summ.gameid == 440 || true) currentList.push(summ.steamid);
                     }
                     
                     var getItems = function(summ) {
@@ -50,7 +50,7 @@ function searchId(id) {
                                 checked[summ.steamid] = false;
                                 checkedTemp[summ.steadid] = true;
                                 
-                                //console.log('MINUS ' + cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',summ.steamid);
+                                console.log('MINUS ' + cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
                                 
                                 if (cVersion == version && thisChecked > goneThrough * 0.75 && goneThrough > allFriendsOnline * 0.5 + 5) {
                                     next();
@@ -63,7 +63,7 @@ function searchId(id) {
                             //console.log('Checking bp v'+cVersion);
                             if (cVersion == version) {
                                 thisChecked++;
-                                //console.log(cVersion + '.' + thisChecked,goneThrough,allFriendsOnline,'total',totalProcessed,'of',summ.steamid);
+                                console.log(cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
                             }
                             items = items.items;
                             for (var i in items) {
@@ -75,6 +75,8 @@ function searchId(id) {
                             }
                         
                             //console.log('cmon',thisChecked,goneThrough,cVersion == version);
+                            
+//                             console.log(cVersion == version, thisChecked > goneThrough * 0.75, goneThrough > allFriendsOnline * 0.5 + 5);
                         
                             if (cVersion == version && thisChecked > goneThrough * 0.75 && goneThrough > allFriendsOnline * 0.5 + 5) {
                                 next();
