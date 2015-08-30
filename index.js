@@ -66,7 +66,9 @@ function searchId(id) {
             db.check.find({ steamid: friendId }, function(err, exists) {
                 if (!exists || !exists.length) {
                     var id = this._conditions.steamid;
-                    checkBackpack(id, cVersion);
+                    setTimeout(function() {
+                        checkBackpack(id, cVersion);
+                    }, 0);
                     
                     var newCheck = new db.check({
                         steamid: id
@@ -82,7 +84,9 @@ function searchId(id) {
                     if (cantFind == friends.length) {
                         console.log('stuck');
                         for (var i = 0; i < 2; i++) {
-                            searchId(friends[Math.floor(Math.random() * friends.length)].steamid);
+                            setTimeout(function() {
+                                searchId(friends[Math.floor(Math.random() * friends.length)].steamid);
+                            }, 0);
                         }
                     }
                 }
@@ -174,11 +178,11 @@ function next() {
     totalProcessed = 0;
     
     setTimeout(function() {
-    for (var i = 0; i < COUNT; i++) {
-        var id = currentList.splice(0,1);
-        if (!id[0]) break;
-        else searchId(id[0]);
-    }
+        for (var i = 0; i < COUNT; i++) {
+            var id = currentList.splice(0,1);
+            if (!id[0]) break;
+            else searchId(id[0]);
+        }
     }, 0);
     
     if (version % 5 == 0) {
