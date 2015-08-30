@@ -48,8 +48,10 @@ var totalProcessed = 0;
 var COUNT = 3;
 
 function searchId(id) {
+    console.log('searchId');
     var cVersion = version;
     sw.friends(id, function(err, people) {
+        console.log('getFriends');
         if (!people) return;
         var friends = people.friends;
         var cantFind = 0;
@@ -63,8 +65,15 @@ function searchId(id) {
             
             if (checkedTemp[friends[f].steamid]) continue;
             
-            setTimeout(function() {
+            //setTimeout(function() {
                 db.check.find({ steamid: friendId }, function(err, exists) {
+                    var id = this._conditions.steamid;
+                    
+                    //console.log('found ' + id);
+                    
+                    if (checkedTemp[id]) return;
+                    checkedTemp[id] = true;
+                    
                     if (!exists || !exists.length) {
                         var id = this._conditions.steamid;
                         setTimeout(function() {
@@ -92,12 +101,13 @@ function searchId(id) {
                         }
                     }
                 });
-            }, 0);
+            //}, 0);
         }
     });
 }
 
 function checkBackpack(id, cVersion) {
+    console.log('checkBacpk',id);
     sw.summary(id, function(err, summ) {
         if (err) return;
         summ = summ.players[0];
@@ -283,3 +293,26 @@ io.on('connection', function(socket) {
         });
     });
 });
+
+
+
+
+
+
+// DEBUGING
+
+/*var memwatch = require('memwatch-next');
+var heapdump = require('heapdump');
+
+memwatch.on('stats', function(stats) {
+    console.log(stats);
+});
+
+memwatch.on('leak', function(info) {
+ console.error(info);
+ var file = './myapp-' + process.pid + '-' + Date.now() + '.heapsnapshot';
+ heapdump.writeSnapshot(file, function(err){
+   if (err) console.error(err);
+   else console.error('Wrote snapshot: ' + file);
+  });
+});*/
