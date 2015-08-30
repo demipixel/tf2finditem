@@ -50,7 +50,7 @@ function searchId(id) {
                                 checked[summ.steamid] = false;
                                 checkedTemp[summ.steadid] = true;
                                 
-                                console.log('MINUS ' + cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
+                                //console.log('MINUS ' + cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
                                 
                                 if (cVersion == version && thisChecked > goneThrough * 0.75 && goneThrough > allFriendsOnline * 0.5 + 5) {
                                     next();
@@ -63,7 +63,7 @@ function searchId(id) {
                             //console.log('Checking bp v'+cVersion);
                             if (cVersion == version) {
                                 thisChecked++;
-                                console.log(cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
+                                //console.log(cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
                             }
                             items = items.items;
                             for (var i in items) {
