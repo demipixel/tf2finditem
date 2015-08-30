@@ -48,10 +48,8 @@ var totalProcessed = 0;
 var COUNT = 3;
 
 function searchId(id) {
-    console.log('searchId');
     var cVersion = version;
     sw.friends(id, function(err, people) {
-        console.log('getFriends');
         if (!people) return;
         var friends = people.friends;
         var cantFind = 0;
@@ -107,7 +105,6 @@ function searchId(id) {
 }
 
 function checkBackpack(id, cVersion) {
-    console.log('checkBacpk',id);
     sw.summary(id, function(err, summ) {
         if (err) return;
         summ = summ.players[0];
@@ -131,7 +128,7 @@ function checkBackpack(id, cVersion) {
                         //checked[summ.steamid] = false;
                         checkedTemp[summ.steadid] = true;
                     
-                        console.log('MINUS ' + cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
+                        //console.log('MINUS ' + cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
                     
                         if (cVersion == version && thisChecked > goneThrough * 0.75 && goneThrough > allFriendsOnline * 0.5 + 5) {
                             next();
@@ -144,7 +141,7 @@ function checkBackpack(id, cVersion) {
                     //console.log('Checking bp v'+cVersion);
                     if (cVersion == version) {
                         thisChecked++;
-                        console.log(cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
+                        //console.log(cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
                     }
                     items = items.items;
                     for (var i in items) {

@@ -42,9 +42,7 @@ function api(type, info, done) {
 	}
 	var url = 'http://api.steampowered.com/' + type + '/' + info.version + '/?key=' + API_KEY + params;
 	
-	console.log(info.steamid,Date.now(),type,'in');
 	request(url, function(err, resp, body) {
-	    console.log(info.steamid,Date.now(),type,'out');
         try {
 		    var json = JSON.parse(body);
 		} catch (err) {
