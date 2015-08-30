@@ -63,34 +63,36 @@ function searchId(id) {
             
             if (checkedTemp[friends[f].steamid]) continue;
             
-            db.check.find({ steamid: friendId }, function(err, exists) {
-                if (!exists || !exists.length) {
-                    var id = this._conditions.steamid;
-                    setTimeout(function() {
-                        checkBackpack(id, cVersion);
-                    }, 0);
+            setTimeout(function() {
+                db.check.find({ steamid: friendId }, function(err, exists) {
+                    if (!exists || !exists.length) {
+                        var id = this._conditions.steamid;
+                        setTimeout(function() {
+                            checkBackpack(id, cVersion);
+                        }, 0);
                     
-                    var newCheck = new db.check({
-                        steamid: id
-                    });
-                    newCheck.save();
-                } else if (exists[0].ignore && exists[0].used == false) {
-                    checkBackpack(exists[0].steamid, cVersion);
-                    exists[0].ignore = false;
-                    exists[0].date = new Date();
-                    exists[0].save();
-                } else {
-                    cantFind++;
-                    if (cantFind == friends.length) {
-                        console.log('stuck');
-                        for (var i = 0; i < 2; i++) {
-                            setTimeout(function() {
-                                searchId(friends[Math.floor(Math.random() * friends.length)].steamid);
-                            }, 0);
+                        var newCheck = new db.check({
+                            steamid: id
+                        });
+                        newCheck.save();
+                    } else if (exists[0].ignore && exists[0].used == false) {
+                        checkBackpack(exists[0].steamid, cVersion);
+                        exists[0].ignore = false;
+                        exists[0].date = new Date();
+                        exists[0].save();
+                    } else {
+                        cantFind++;
+                        if (cantFind == friends.length) {
+                            console.log('stuck');
+                            for (var i = 0; i < 2; i++) {
+                                setTimeout(function() {
+                                    searchId(friends[Math.floor(Math.random() * friends.length)].steamid);
+                                }, 0);
+                            }
                         }
                     }
-                }
-            });
+                });
+            }, 0);
         }
     });
 }
