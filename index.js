@@ -227,8 +227,11 @@ setInterval(function() {
     });
 },1000*6);
 
+var live = false;
+
 fs.exists('production', function(exists) {
 	local = !exists;
+	live = !local;
 	var port = process.env.PORT || (exists ? 80 : 3000);
 	var server = app.listen(port, function () {
 	  var host = server.address().address;
@@ -243,7 +246,7 @@ app.get('/', function(req, res) {
     db.check.find({ yes: true, ignore: false, used: false }, function(err, checks) {
         res.render('index.ejs', {
             list: checks,
-            live: false,
+            live: live,
             time: (Date.now() - START_TIME)/1000,
             total: totalScanned
         });

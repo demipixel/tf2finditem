@@ -22,7 +22,7 @@ function tryClick(id) {
 }
 
 function init() {
-    socket = io(<%- live ? '"http://162.243.166.211:4000"' : '"localhost:4000"' %>);
+    socket = io(<%- live ? '"http://162.243.172.182:4000"' : '"localhost:4000"' %>);
     
     socket.on('open', function(id) {
         window.open('http://steamcommunity.com/profiles/' + id,'_blank');
