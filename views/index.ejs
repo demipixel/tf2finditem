@@ -1,0 +1,63 @@
+<html>
+<head>
+<style>
+
+.semilink {
+    color: blue
+}
+
+.semilink:hover {
+    text-decoration: underline;
+}
+
+</style>
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script>
+
+var socket;
+
+function tryClick(id) {
+    socket.emit('try', id);
+}
+
+function init() {
+    socket = io(<%- live ? '"http://162.243.166.211:4000"' : '"localhost:4000"' %>);
+    
+    socket.on('open', function(id) {
+        window.open('http://steamcommunity.com/profiles/' + id,'_blank');
+    });
+    
+    socket.on('clicked', function(id) {
+        $('#' + id).removeClass('semilink');
+        $('#' + id).html($('#' + id).text() + ' - <a href="http://steamcommunity.com/profiles/' + id + '">Profile</a>');
+    });
+    
+    socket.on('new', function(info) {
+        $('body').append('<span class=semilink onClick="tryClick(' + info.steamid + ')" id=' + info.steamid + '>User: ' + info.name + '</span><br>');
+    });
+    
+    socket.on('stats', function(stats) {
+        $('#min').text(stats.time);
+        $('#total').text(stats.total);
+        $('#rate').text(Math.floor(stats.total/stats.time * 10) / 10);
+    });
+}
+
+</script>
+</head>
+<body onLoad=init()>
+
+This session:<br>
+<b><span id=min><%- Math.floor(time/60 * 10)/10 %></span></b> minutes searching<br>
+<b><span id=total><%- total %></span></b> backpacks scanned<br>
+Rate: <b><span id=rate><%- Math.floor(total/(time/60) * 10) / 10 %></span></b> backpacks scanned per minute.<br><br>
+
+<% list.forEach(function(user) { %>
+
+<span class=semilink onClick="tryClick('<%- user.steamid %>')" id=<%- user.steamid %>>User: <%= user.name %></span><br>
+
+<% }); %>
+
+</body>
+</html>
