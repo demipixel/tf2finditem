@@ -29,7 +29,6 @@ function init() {
     });
     
     socket.on('clicked', function(id) {
-        $('#' + id).removeClass('semilink');
         if (!$('#' + id).hasClass('done')) {
             $('#' + id).html($('#' + id).text() + ' - <a href="http://steamcommunity.com/profiles/' + id + '">Profile</a>');
             $('#' + id).addClass('done');
@@ -37,7 +36,11 @@ function init() {
     });
     
     socket.on('new', function(info) {
-        $('body').append('<span class=semilink onClick="tryClick(' + info.steamid + ')" id=' + info.steamid + '>User: ' + info.name + '</span><br>');
+        var str = '';
+        str += '<span  id=' + info.steamid + '>';
+        str += '<a onClick="tryClick(' + info.steamid + ')" href="http://steamcommunity.com/profiles/' + info.steamid + '">User: ' + info.name + '</a><br>';
+        str += '</span><br>';
+        $('body').append(str);
     });
     
     socket.on('stats', function(stats) {
@@ -59,7 +62,9 @@ Rate: <b><span id=rate><%- Math.floor(total/(time/60) * 10) / 10 %></span></b> b
 <% list.forEach(function(user) { %>
 
 <% /* %><span class=semilink onClick="tryClick('<%- user.steamid %>')" id=<%- user.steamid %>>User: <%= user.name %></span><br><% */ %>
-<a onClick="tryClick('<%- user.steamid %>')" href="http://steamcommunity.com/profiles/<%- user.steamid %>">User: <%= user.name %></a><br>
+<span  id=<%- user.steamid %>>
+<a onClick="tryClick('<%- user.steamid %>')" href="http://steamcommunity.com/profiles/<%- user.steamid %>">User: <%= user.name %></a>
+</span><br>
 
 <% }); %>
 
