@@ -38,7 +38,7 @@ function init() {
     socket.on('new', function(info) {
         var str = '';
         str += '<span  id=' + info.steamid + '>';
-        str += '<a onClick="tryClick(' + info.steamid + ')" href="http://steamcommunity.com/profiles/' + info.steamid + '">User: ' + info.name + '</a><br>';
+        str += '<a onClick="tryClick(' + info.steamid + ')" href="http://steamcommunity.com/profiles/' + info.steamid + '">User: ' + info.name + '</a>';
         str += '</span><br>';
         $('body').append(str);
     });
