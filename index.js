@@ -108,7 +108,7 @@ function checkBackpack(id, cVersion) {
     sw.summary(id, function(err, summ) {
         if (err) return;
         summ = summ.players[0];
-        if (summ.personastate > 0) {
+        if (summ && summ.personastate > 0) {
             if (cVersion == version) {
                 allFriendsOnline++;
                 goneThrough++;
