@@ -26,7 +26,7 @@ MongoDB.on('error', function(err) {
 
 MongoDB.once('open', function() {
 	console.log('Connected to database');
-	searchId('76561198044977807');
+	searchId('76561198023936575');
 });
 
 var db = {
@@ -286,6 +286,9 @@ io.on('connection', function(socket) {
             if (checks && checks.length) {
                 checks[0].used = true;
                 checks[0].save();
+                console.log('Removing',id);
+            } else {
+                console.log('Can\'t find user clicked:',id);
             }
         });
     });
