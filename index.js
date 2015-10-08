@@ -26,7 +26,7 @@ MongoDB.on('error', function(err) {
 
 MongoDB.once('open', function() {
 	console.log('Connected to database');
-	searchId('76561198046847895');
+	searchId('76561198140813355');
 });
 
 var db = {
