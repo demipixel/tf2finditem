@@ -26,7 +26,7 @@ MongoDB.on('error', function(err) {
 
 MongoDB.once('open', function() {
 	console.log('Connected to database');
-	searchId('76561198045173401');
+	searchId('76561198046847895');
 });
 
 var db = {
@@ -112,7 +112,8 @@ function checkBackpack(id, cVersion) {
             if (cVersion == version) {
                 allFriendsOnline++;
                 goneThrough++;
-                if (summ.gameid == 440 || true) currentList.push(summ.steamid);
+                //console.log('found a guy');
+                if (summ.gameid == 440) currentList.push(summ.steamid);
             }
         
             var getItems = function(summ) {
@@ -145,7 +146,7 @@ function checkBackpack(id, cVersion) {
                     }
                     items = items.items;
                     for (var i in items) {
-                        if (items[i].defindex == 5817) {
+                        if (items[i].defindex >= 5822 && items[i].defindex <= 5823) {
                             console.log('http://steamcommunity.com/profiles/' + summ.steamid,'(version ' + cVersion + ')');
                             //yes.push(summ.steamid);
                             db.check.find({ steamid: summ.steamid }, function(err, checks) {
@@ -188,9 +189,9 @@ function next() {
     
     setTimeout(function() {
         for (var i = 0; i < COUNT; i++) {
-            var id = currentList.splice(0,1);
-            if (!id[0]) break;
-            else searchId(id[0]);
+            var id = currentList.length > 20 ? currentList.splice(0,1) : currentList[i];
+            if (!id) break;
+            else searchId(id);
         }
     }, 0);
     
@@ -198,7 +199,7 @@ function next() {
         checkedTemp = {};
     }
     
-    if (currentList.length > 50) currentList = currentList.splice(currentList.length - 50);
+    if (currentList.length > 100) currentList = currentList.splice(currentList.length - 100);
     COUNT = 15;
 }
 
@@ -249,6 +250,8 @@ fs.exists('production', function(exists) {
 	var server = app.listen(port, function () {
 	  var host = server.address().address;
 	  var port = server.address().port;
+	  
+	  console.log('Is ' + (live ? '' : 'not ') + 'live!');
 
 	  console.log('Server live at http://localhost:' + port);
 	  console.log(host);
