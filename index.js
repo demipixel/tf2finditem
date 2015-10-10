@@ -113,7 +113,7 @@ function checkBackpack(id, cVersion) {
                 allFriendsOnline++;
                 goneThrough++;
                 //console.log('found a guy');
-                if (summ.gameid == 440 || true) currentList.push(summ.steamid);
+                if (summ.gameid == 440/* || true*/) currentList.push(summ.steamid);
             }
         
             var getItems = function(summ) {
