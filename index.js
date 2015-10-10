@@ -1,4 +1,7 @@
-var sw = require('./steamweb')('4D1FCD8C86BC1A0CD071A0F1355EE5D9');
+var sw = require('./steamweb')(['7EDFF01931452753ABB0145CC12A3D49',
+                                '4D1FCD8C86BC1A0CD071A0F1355EE5D9',
+                                'D401A6D4E6E7167E261052A0B2A3266E',
+                                'F9A53C4037E8837BD99ABC77DE8411F8']);
 
 var mongoose = require('mongoose');
 var express = require('express');
@@ -104,6 +107,10 @@ function searchId(id) {
     });
 }
 
+var iq = 0;
+var jq = 0;
+var qq = 0;
+
 function checkBackpack(id, cVersion) {
     sw.summary(id, function(err, summ) {
         if (err) return;
@@ -117,8 +124,9 @@ function checkBackpack(id, cVersion) {
             }
         
             var getItems = function(summ) {
-        
+                console.log(++iq, jq, qq);
                 sw.items(440, summ.steamid, function(err, items) {
+                    console.log(iq, jq, ++qq)
                     if (cVersion == version) totalProcessed++;
                     if (err || !items) {   
                         if (cVersion == version) {
@@ -126,8 +134,11 @@ function checkBackpack(id, cVersion) {
                             allFriendsOnline--;
                         }
                         db.check.remove({ steamid: summ.steamid });
-                        //checked[summ.steamid] = false;
-                        checkedTemp[summ.steadid] = true;
+
+                        //checkedTemp[summ.steadid] = true;
+
+                        //console.log(err);
+                        //checkBackpack(id, cVersion);
                     
                         //console.log('MINUS ' + cVersion + '.' + thisChecked,goneThrough,'total',totalProcessed,'of',allFriendsOnline);
                     
@@ -137,7 +148,7 @@ function checkBackpack(id, cVersion) {
                             next();
                         }
                         return;
-                    }
+                    } else console.log(iq,++jq, qq);
                     totalScanned++;
                     //console.log('Checking bp v'+cVersion);
                     if (cVersion == version) {

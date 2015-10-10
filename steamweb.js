@@ -1,6 +1,7 @@
 var request = require('request');
 
 var API_KEY = '';
+var POS_API_KEY = 0;
 
 var STEAM = {};
 
@@ -40,12 +41,20 @@ function api(type, info, done) {
 			params += '&' + i + '=' + info[i];
 		}
 	}
-	var url = 'http://api.steampowered.com/' + type + '/' + info.version + '/?key=' + API_KEY + params;
+	var api_key = API_KEY;
+	if (typeof API_KEY != 'string') {
+		api_key = API_KEY[POS_API_KEY];
+		POS_API_KEY = (POS_API_KEY + 1) % API_KEY.length;
+	}
+	var url = 'http://api.steampowered.com/' + type + '/' + info.version + '/?key=' + api_key + params;
 	
 	request(url, function(err, resp, body) {
+
         try {
 		    var json = JSON.parse(body);
 		} catch (err) {
+			console.log('url',url);
+			console.log('body',body);
 		    return done(err);
 		}
 		
